@@ -50,6 +50,7 @@ body {
 .claim-step-one__scene {
   position: relative;
   width: min(780px, 100%);
+  min-height: 540px;
   margin: 1.5rem auto;
 }
 
@@ -79,65 +80,140 @@ body {
 }
 
 .otter-shell {
-  position: relative;
-  width: 260px;
-  height: 320px;
-  margin: 0 auto;
-  top: 20%;
+  display: block;
+  width: 100%;
+  height: auto;
   opacity: 0;
   transform: translateY(14px) scale(0.95);
   transition: all 320ms ease;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+  filter: drop-shadow(0 8px 24px rgb(0 0 0 / 18%));
 }
 
-.otter-shell::before {
-  content: '';
+.otter-stage {
+  position: relative;
+  width: min(480px, 90%);
+  margin: 0 auto;
+  top: 10%;
+}
+
+.otter-accessory-layer {
   position: absolute;
   inset: 0;
-  border-radius: 45% 45% 40% 40%;
-  background: #cb8d5a;
+  pointer-events: none;
 }
 
-.otter-ear {
+.otter-accessory {
   position: absolute;
-  top: 34px;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: #8c5734;
+  left: calc(var(--anchor-x) * 1%);
+  top: calc(var(--anchor-y) * 1%);
+  width: calc(var(--anchor-width) * 1%);
+  transform: translate(-50%, -50%) rotate(var(--anchor-rotation));
 }
 
-.otter-ear--left { left: 18px; }
-.otter-ear--right { right: 18px; }
+.otter-accessory__image,
+.otter-accessory__fallback {
+  display: block;
+  width: 100%;
+}
 
-.otter-face {
+.otter-accessory__image {
+  display: none;
+}
+
+.otter-accessory.is-ready .otter-accessory__image {
+  display: block;
+}
+
+.otter-accessory__fallback {
+  padding: 0.35rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-align: center;
+  white-space: nowrap;
+  color: var(--deep-blue);
+  background: rgb(255 255 255 / 88%);
+  box-shadow: 0 8px 18px rgb(28 61 102 / 12%);
+}
+
+.otter-accessory.is-ready .otter-accessory__fallback {
+  display: none;
+}
+
+.otter-name-badge {
   position: absolute;
   left: 50%;
-  top: 84px;
+  top: 12%;
+  z-index: 2;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
   transform: translateX(-50%);
-  width: 160px;
-  height: 130px;
-  border-radius: 50%;
-  background: #f8e0c8;
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  color: var(--deep-blue);
+  background: rgb(255 255 255 / 78%);
+  box-shadow: 0 10px 24px rgb(28 61 102 / 14%);
+}
+
+.claim-step-one__controls {
+  position: relative;
+  z-index: 2;
+  width: min(860px, 100%);
+  margin: 0 auto 1.25rem;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  justify-items: center;
-  align-items: center;
-  padding: 16px 24px;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 24px;
+  background: rgb(255 255 255 / 24%);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 14px 34px rgb(28 61 102 / 12%);
 }
 
-.otter-eye {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: #21140e;
+.otter-field {
+  display: grid;
+  gap: 0.65rem;
 }
 
-.otter-nose {
-  grid-column: 1 / span 2;
-  width: 24px;
-  height: 16px;
-  border-radius: 50%;
-  background: #522d1a;
+.otter-field__label {
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+.otter-field__input {
+  width: 100%;
+  border: 0;
+  border-radius: 16px;
+  padding: 0.9rem 1rem;
+  font: inherit;
+  color: var(--deep-blue);
+  background: rgb(255 255 255 / 92%);
+  box-shadow: inset 0 0 0 1px rgb(28 61 102 / 8%);
+}
+
+.otter-field__input:focus {
+  outline: 2px solid rgb(255 255 255 / 90%);
+  outline-offset: 2px;
+}
+
+.otter-accessory-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.otter-accessory-chip {
+  color: var(--deep-blue);
+  background: rgb(255 255 255 / 82%);
+  box-shadow: none;
+}
+
+.otter-accessory-chip.is-selected,
+.otter-accessory-chip[aria-pressed='true'] {
+  color: white;
+  background: var(--deep-blue);
 }
 
 .sparkles {
@@ -276,11 +352,29 @@ button:active {
 
 @media (max-width: 640px) {
   .claim-step-one__scene {
-    min-height: 420px;
+    min-height: 380px;
   }
 
-  .otter-shell {
-    width: 210px;
-    height: 270px;
+  .otter-stage {
+    width: min(320px, 86%);
+    top: 16%;
+  }
+
+  .otter-name-badge {
+    top: 16%;
+    font-size: 0.85rem;
+  }
+
+  .claim-step-one__controls {
+    padding: 0.85rem;
+    border-radius: 20px;
+  }
+
+  .otter-accessory-picker {
+    gap: 0.6rem;
+  }
+
+  .otter-accessory {
+    width: calc(var(--anchor-width) * 1.15%);
   }
 }
