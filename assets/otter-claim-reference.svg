@@ -1,0 +1,54 @@
+<svg width="1440" height="900" viewBox="0 0 1440 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="900">
+      <stop offset="0" stop-color="#7AD7FF"/>
+      <stop offset="1" stop-color="#2FA7F7"/>
+    </linearGradient>
+    <radialGradient id="island" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(720 650) rotate(90) scale(200 470)">
+      <stop stop-color="#C4F3FF"/>
+      <stop offset="1" stop-color="#71C8EE"/>
+    </radialGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1440" height="900" fill="url(#bg)"/>
+
+  <ellipse cx="250" cy="220" rx="220" ry="90" fill="#A8E17F"/>
+  <ellipse cx="250" cy="250" rx="220" ry="40" fill="#FFA049"/>
+  <ellipse cx="1150" cy="210" rx="190" ry="80" fill="#A8E17F"/>
+  <ellipse cx="1150" cy="238" rx="190" ry="36" fill="#FFA049"/>
+
+  <ellipse cx="720" cy="650" rx="470" ry="190" fill="url(#island)"/>
+  <path d="M320 640C460 590 920 560 1110 650" stroke="#FFE2BF" stroke-width="38" stroke-linecap="round" opacity="0.65"/>
+
+  <g filter="url(#glow)">
+    <path d="M280 650C325 615 365 615 410 650C365 685 325 685 280 650Z" fill="#9EF7FF"/>
+    <path d="M1030 700C1070 665 1110 665 1150 700C1110 735 1070 735 1030 700Z" fill="#9EF7FF"/>
+  </g>
+
+  <circle cx="720" cy="500" r="120" fill="#B97A4B"/>
+  <ellipse cx="720" cy="535" rx="150" ry="170" fill="#C98856"/>
+  <ellipse cx="610" cy="500" rx="24" ry="20" fill="#3D2418"/>
+  <ellipse cx="830" cy="500" rx="24" ry="20" fill="#3D2418"/>
+  <ellipse cx="720" cy="530" rx="40" ry="28" fill="#F8E1C8"/>
+  <circle cx="680" cy="500" r="10" fill="#21140E"/>
+  <circle cx="760" cy="500" r="10" fill="#21140E"/>
+  <ellipse cx="720" cy="524" rx="16" ry="11" fill="#522D1A"/>
+  <path d="M706 545Q720 556 734 545" stroke="#E1654A" stroke-width="4" stroke-linecap="round"/>
+
+  <circle cx="720" cy="500" r="154" stroke="#D9F5FF" stroke-width="9"/>
+  <rect x="620" y="610" width="200" height="82" rx="24" fill="#F6FBFF"/>
+  <rect x="676" y="632" width="88" height="38" rx="10" fill="#8CEBFF"/>
+
+  <rect x="120" y="82" width="420" height="86" rx="24" fill="white" fill-opacity="0.9"/>
+  <text x="150" y="135" fill="#1C3D66" font-size="38" font-family="Arial, sans-serif">挥挥魔法棒，召唤你的水獭！</text>
+
+  <rect x="1080" y="760" width="250" height="88" rx="30" fill="#FF9A3D"/>
+  <text x="1144" y="818" fill="white" font-size="36" font-family="Arial, sans-serif">开始领养</text>
+</svg>
