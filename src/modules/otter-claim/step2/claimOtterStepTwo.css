@@ -1,0 +1,269 @@
+/* ─── Step 2: Adventure Gear Selection ─────────────────────────────────────── */
+
+:root {
+  --deep-blue:  #1c3d66;
+  --sky-blue:   #58c8ff;
+  --accent-orange: #ff9a3d;
+  --glow-cyan:  #83f2ff;
+  --grass-green: #9edb7d;
+}
+
+/* ── Root section ─────────────────────────────────────────────────────────── */
+
+.claim-step-two {
+  position: relative;
+  display: grid;
+  height: 100vh;
+  overflow: hidden;
+  font-family: 'PingFang SC', 'Microsoft YaHei', 'Nunito', sans-serif;
+  color: var(--deep-blue);
+}
+
+/* ── Background image — fills screen, ratio preserved via object-fit:cover ── */
+
+.claim-step-two__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ── Scrollable content layer on top of the background ───────────────────── */
+
+.claim-step-two__content {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 1rem 1.25rem;
+  scrollbar-width: none;
+}
+
+.claim-step-two__content::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Header ───────────────────────────────────────────────────────────────── */
+
+.claim-step-two__header {
+  text-align: center;
+  padding: 0.5rem 0 0.25rem;
+}
+
+.claim-step-two__header h1 {
+  margin: 0;
+  font-size: clamp(1.5rem, 3.2vw, 2.4rem);
+  font-weight: 900;
+  color: white;
+  text-shadow:
+    0 2px 8px rgb(28 61 102 / 40%),
+    0 0 24px rgb(131 242 255 / 50%);
+}
+
+.claim-step-two__header p {
+  margin: 0.3rem 0 0;
+  font-size: clamp(0.85rem, 1.8vw, 1.1rem);
+  color: rgb(255 255 255 / 88%);
+  text-shadow: 0 1px 4px rgb(28 61 102 / 30%);
+}
+
+.claim-step-two__header strong {
+  color: var(--glow-cyan);
+}
+
+/* ── Otter preview scene ──────────────────────────────────────────────────── */
+
+.claim-step-two__scene {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem 0;
+}
+
+.step-two-otter-stage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.step-two-otter-shell {
+  display: block;
+  width: min(200px, 40vw);
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 20px rgb(28 61 102 / 30%));
+  animation: step-two-otter-float 2.5s ease-in-out infinite;
+}
+
+@keyframes step-two-otter-float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+
+.step-two-selection-badge {
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--deep-blue);
+  background: rgb(255 255 255 / 85%);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 6px 18px rgb(28 61 102 / 18%);
+  white-space: nowrap;
+  transition: transform 200ms ease;
+}
+
+/* ── Accessory groups ─────────────────────────────────────────────────────── */
+
+.claim-step-two__groups {
+  display: grid;
+  gap: 0.75rem;
+  width: min(860px, 100%);
+  margin: 0 auto;
+  align-content: start;
+}
+
+.step-two-group {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.step-two-group__label {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: rgb(255 255 255 / 90%);
+  text-shadow: 0 1px 4px rgb(28 61 102 / 30%);
+  padding-left: 0.25rem;
+}
+
+.step-two-group__options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.6rem;
+}
+
+.step-two-option-card {
+  appearance: none;
+  border: 2px solid rgb(255 255 255 / 50%);
+  border-radius: 20px;
+  padding: 0.7rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  cursor: pointer;
+  background: rgb(255 255 255 / 22%);
+  backdrop-filter: blur(10px);
+  color: white;
+  font-family: inherit;
+  transition:
+    transform 140ms ease,
+    background 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.step-two-option-card:hover {
+  background: rgb(255 255 255 / 35%);
+  border-color: rgb(255 255 255 / 80%);
+  transform: translateY(-2px);
+}
+
+.step-two-option-card:active {
+  transform: scale(0.96);
+}
+
+.step-two-option-card.is-selected,
+.step-two-option-card[aria-pressed='true'] {
+  background: var(--accent-orange);
+  border-color: white;
+  box-shadow:
+    0 0 0 3px rgb(255 154 61 / 40%),
+    0 8px 20px rgb(255 154 61 / 35%);
+  transform: translateY(-3px);
+}
+
+.step-two-option-card__emoji {
+  font-size: clamp(1.4rem, 3.5vw, 2rem);
+  line-height: 1;
+}
+
+.step-two-option-card__label {
+  font-size: clamp(0.72rem, 1.5vw, 0.85rem);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* ── Footer ───────────────────────────────────────────────────────────────── */
+
+.claim-step-two__footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0 0.5rem;
+  flex-wrap: wrap;
+}
+
+.step-two-back-btn,
+.step-two-random-btn,
+.step-two-next-btn {
+  appearance: none;
+  border: 0;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0.8rem 1.3rem;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.step-two-back-btn:active,
+.step-two-random-btn:active,
+.step-two-next-btn:active {
+  transform: scale(0.97);
+}
+
+.step-two-back-btn {
+  color: white;
+  background: rgb(255 255 255 / 22%);
+  backdrop-filter: blur(8px);
+  border: 2px solid rgb(255 255 255 / 50%);
+}
+
+.step-two-back-btn:hover {
+  background: rgb(255 255 255 / 35%);
+}
+
+.step-two-random-btn {
+  color: var(--deep-blue);
+  background: var(--glow-cyan);
+  box-shadow: 0 8px 20px rgb(131 242 255 / 40%);
+}
+
+.step-two-random-btn:hover {
+  box-shadow: 0 10px 26px rgb(131 242 255 / 55%);
+  transform: translateY(-1px);
+}
+
+.step-two-next-btn {
+  color: white;
+  background: var(--accent-orange);
+  box-shadow: 0 8px 20px rgb(255 154 61 / 40%);
+}
+
+.step-two-next-btn:hover {
+  box-shadow: 0 10px 26px rgb(255 154 61 / 55%);
+  transform: translateY(-1px);
+}

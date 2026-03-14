@@ -78,13 +78,11 @@ export function createClaimOtterStepOne({ onNext = () => {} }: ClaimOtterStepOne
     </header>
 
     <div class="claim-step-one__scene" aria-live="polite">
-      <div class="floating-island"></div>
       <div class="otter-stage" data-stage>
         <img class="otter-shell" data-otter src="${otterImg}" alt="${DEFAULT_OTTER_NAME}" />
         <div class="otter-accessory-layer" data-accessory-layer aria-hidden="true"></div>
       </div>
       <div class="otter-name-badge" data-otter-name>${DEFAULT_OTTER_NAME}</div>
-      <div class="sparkles" data-sparkles aria-hidden="true"></div>
     </div>
 
     <section class="claim-step-one__controls" aria-label="水獭设置">
@@ -130,7 +128,6 @@ export function createClaimOtterStepOne({ onNext = () => {} }: ClaimOtterStepOne
   const otter = requireElement<HTMLImageElement>(element, '[data-otter]');
   const otterNameBadge = requireElement<HTMLElement>(element, '[data-otter-name]');
   const nameInput = requireElement<HTMLInputElement>(element, '[data-name-input]');
-  const sparkles = requireElement<HTMLElement>(element, '[data-sparkles]');
   const accessoryLayer = requireElement<HTMLElement>(element, '[data-accessory-layer]');
   const accessoryButtons = Array.from(element.querySelectorAll<HTMLButtonElement>('[data-accessory-id]'));
 
@@ -205,7 +202,6 @@ export function createClaimOtterStepOne({ onNext = () => {} }: ClaimOtterStepOne
     isSummoned = true;
     element.classList.add('is-summoned');
     otter.classList.add('is-visible');
-    sparkles.classList.add('is-active');
 
     summonButton.textContent = '召唤成功！';
     summonButton.disabled = true;
