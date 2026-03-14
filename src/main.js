@@ -1,3 +1,4 @@
+import './modules/otter-claim/step1/claimOtterStepOne.css';
 import { createClaimOtterStepOne } from './modules/otter-claim/step1/createClaimOtterStepOne.js';
 
 const app = document.querySelector('#app');
