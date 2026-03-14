@@ -10,27 +10,26 @@ if (!app) {
 }
 
 function showStep(incoming: HTMLElement): void {
-  const current = app.firstElementChild as HTMLElement | null;
+  const current = app!.firstElementChild as HTMLElement | null;
 
   if (current) {
     current.remove();
   }
 
-  app.append(incoming);
+  app!.append(incoming);
 }
 
 const stepOneModule = createClaimOtterStepOne({
-  onNext({ name, accessories }) {
+  onNext({ name, accessories, gearSelections }) {
     const stepTwoModule = createClaimOtterStepTwo({
-      name,
-      step1Accessories: accessories,
       onBack() {
         showStep(stepOneModule.element);
       },
-      onNext({ name: otterName, step2Accessories }) {
-        const selected = Object.values(step2Accessories).join('、') || '暂无';
+      onNext() {
+        const gearText = Object.values(gearSelections).join('、') || '暂无';
+        const accessoryText = accessories.length > 0 ? accessories.join('、') : '暂无';
 
-        window.alert(`已完成第二步：${otterName} 的冒险装备已选好！\n装备：${selected}`);
+        window.alert(`${name} 已就位！配饰：${accessoryText}，装备：${gearText}。`);
       },
     });
 

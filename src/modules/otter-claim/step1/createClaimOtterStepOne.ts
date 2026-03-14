@@ -5,49 +5,60 @@ const DEFAULT_OTTER_NAME = '小浪花';
 type ClaimOtterStepOnePayload = {
   name: string;
   accessories: string[];
+  gearSelections: Record<string, string>;
 };
 
 type ClaimOtterStepOneOptions = {
   onNext?: (payload: ClaimOtterStepOnePayload) => void;
 };
 
-type AccessoryDefinition = {
+type AccessoryOption = {
   id: string;
   label: string;
-  assetPath: string;
-  anchorX: number;
-  anchorY: number;
-  width: number;
-  rotation: number;
+  emoji: string;
 };
 
-const ACCESSORY_CATALOG: AccessoryDefinition[] = [
+type AccessoryGroup = {
+  id: string;
+  label: string;
+  bx: number;
+  by: number;
+  options: AccessoryOption[];
+};
+
+const ACCESSORY_GROUPS: AccessoryGroup[] = [
   {
-    id: 'cap',
-    label: '小帽子',
-    assetPath: '/assets/accessories/otter-cap.png',
-    anchorX: 51,
-    anchorY: 18,
-    width: 24,
-    rotation: -3,
+    id: 'headwear',
+    label: '头饰',
+    bx: 50,
+    by: 3,
+    options: [
+      { id: 'star-cap',    label: '星星帽',   emoji: '⭐' },
+      { id: 'headphones',  label: '小耳机',   emoji: '🎧' },
+      { id: 'moon-clip',   label: '月亮发夹', emoji: '🌙' },
+    ],
   },
   {
-    id: 'glasses',
-    label: '圆眼镜',
-    assetPath: '/assets/accessories/otter-glasses.png',
-    anchorX: 50,
-    anchorY: 31,
-    width: 30,
-    rotation: 0,
+    id: 'back',
+    label: '背饰',
+    bx: 92,
+    by: 42,
+    options: [
+      { id: 'backpack',    label: '小背包',   emoji: '🎒' },
+      { id: 'cape',        label: '披风',     emoji: '🦸' },
+      { id: 'bubble-ring', label: '气泡环',   emoji: '🫧' },
+    ],
   },
   {
-    id: 'scarf',
-    label: '围巾',
-    assetPath: '/assets/accessories/otter-scarf.png',
-    anchorX: 50,
-    anchorY: 58,
-    width: 36,
-    rotation: 0,
+    id: 'hand',
+    label: '手持',
+    bx: 15,
+    by: 88,
+    options: [
+      { id: 'magic-wand',  label: '魔法棒',   emoji: '🪄' },
+      { id: 'book',        label: '小书',     emoji: '📖' },
+      { id: 'shell',       label: '发光贝壳', emoji: '🐚' },
+    ],
   },
 ];
 
@@ -64,7 +75,11 @@ function requireElement<T extends Element>(root: ParentNode, selector: string): 
 export function createClaimOtterStepOne({ onNext = () => {} }: ClaimOtterStepOneOptions = {}): { element: HTMLElement } {
   let isSummoned = false;
   let otterName = DEFAULT_OTTER_NAME;
-  const selectedAccessoryIds = new Set<string>();
+
+  // cycleIndex per group: 0 = none, 1..n = option index
+  const groupCycleIndex: Record<string, number> = Object.fromEntries(
+    ACCESSORY_GROUPS.map((g) => [g.id, 0]),
+  );
 
   const element = document.createElement('section');
   element.className = 'claim-step-one';
@@ -83,42 +98,34 @@ export function createClaimOtterStepOne({ onNext = () => {} }: ClaimOtterStepOne
         <div class="otter-accessory-layer" data-accessory-layer aria-hidden="true"></div>
       </div>
       <div class="otter-name-badge" data-otter-name>${DEFAULT_OTTER_NAME}</div>
+      <div class="step-two-selection-badge" data-selection-badge aria-live="polite">快来穿搭吧！</div>
+      ${ACCESSORY_GROUPS.map(
+        (g) =>
+          `<button
+            class="otter-bubble"
+            type="button"
+            data-bubble-group="${g.id}"
+            aria-pressed="false"
+            aria-label="${g.label}"
+            style="--bx:${g.bx};--by:${g.by}"
+          >＋</button>`,
+      ).join('')}
     </div>
 
-    <section class="claim-step-one__controls" aria-label="水獭设置">
-      <label class="otter-field">
-        <span class="otter-field__label">给水獭取名</span>
-        <input
-          class="otter-field__input"
-          type="text"
-          maxlength="12"
-          value="${DEFAULT_OTTER_NAME}"
-          placeholder="请输入水獭名字"
-          data-name-input
-        />
-      </label>
-
-      <div class="otter-field">
-        <span class="otter-field__label">选择配饰</span>
-        <div class="otter-accessory-picker" data-accessory-picker>
-          ${ACCESSORY_CATALOG.map(
-            (item) => `
-              <button
-                class="otter-accessory-chip"
-                type="button"
-                data-accessory-id="${item.id}"
-                aria-pressed="false"
-              >
-                ${item.label}
-              </button>
-            `,
-          ).join('')}
-        </div>
-      </div>
-    </section>
+    <div class="otter-name-input-wrap">
+      <input
+        class="otter-field__input"
+        type="text"
+        maxlength="12"
+        value="${DEFAULT_OTTER_NAME}"
+        placeholder="给你的水獭取个名字吧~"
+        data-name-input
+      />
+    </div>
 
     <footer class="claim-step-one__footer">
       <button class="magic-btn" type="button" data-summon>挥挥魔法棒</button>
+      <button class="step-two-random-btn" type="button" data-random>随机一下 🎲</button>
       <button class="next-btn" type="button" data-next disabled>继续下一步</button>
     </footer>
   `;
@@ -128,12 +135,9 @@ export function createClaimOtterStepOne({ onNext = () => {} }: ClaimOtterStepOne
   const otter = requireElement<HTMLImageElement>(element, '[data-otter]');
   const otterNameBadge = requireElement<HTMLElement>(element, '[data-otter-name]');
   const nameInput = requireElement<HTMLInputElement>(element, '[data-name-input]');
-  const accessoryLayer = requireElement<HTMLElement>(element, '[data-accessory-layer]');
-  const accessoryButtons = Array.from(element.querySelectorAll<HTMLButtonElement>('[data-accessory-id]'));
-
-  function getSelectedAccessoryLabels(): string[] {
-    return ACCESSORY_CATALOG.filter(({ id }) => selectedAccessoryIds.has(id)).map(({ label }) => label);
-  }
+  const selectionBadge = requireElement<HTMLElement>(element, '[data-selection-badge]');
+  const randomButton = requireElement<HTMLButtonElement>(element, '[data-random]');
+  const bubbleButtons = Array.from(element.querySelectorAll<HTMLButtonElement>('[data-bubble-group]'));
 
   function syncOtterName(): void {
     const nextName = nameInput.value.trim() || DEFAULT_OTTER_NAME;
@@ -143,55 +147,51 @@ export function createClaimOtterStepOne({ onNext = () => {} }: ClaimOtterStepOne
     otter.alt = `${nextName}的形象`;
   }
 
-  function renderAccessoryLayer(): void {
-    accessoryLayer.replaceChildren();
-
-    ACCESSORY_CATALOG.filter(({ id }) => selectedAccessoryIds.has(id)).forEach((item) => {
-      const accessory = document.createElement('div');
-      accessory.className = 'otter-accessory';
-      accessory.style.setProperty('--anchor-x', String(item.anchorX));
-      accessory.style.setProperty('--anchor-y', String(item.anchorY));
-      accessory.style.setProperty('--anchor-width', String(item.width));
-      accessory.style.setProperty('--anchor-rotation', `${item.rotation}deg`);
-
-      const image = document.createElement('img');
-      image.className = 'otter-accessory__image';
-      image.src = item.assetPath;
-      image.alt = item.label;
-      image.loading = 'lazy';
-
-      const fallback = document.createElement('span');
-      fallback.className = 'otter-accessory__fallback';
-      fallback.textContent = `${item.label} 待素材`;
-
-      image.addEventListener('load', () => {
-        accessory.classList.add('is-ready');
-      });
-
-      image.addEventListener('error', () => {
-        accessory.classList.remove('is-ready');
-      });
-
-      accessory.append(image, fallback);
-      accessoryLayer.append(accessory);
+  function updateSelectionBadge(): void {
+    const labels = ACCESSORY_GROUPS.flatMap((g) => {
+      const idx = groupCycleIndex[g.id] ?? 0;
+      if (idx === 0) return [];
+      const opt = g.options[idx - 1]!;
+      return [`${opt.emoji}${opt.label}`];
     });
+
+    selectionBadge.textContent = labels.length > 0 ? labels.join('  ') : '快来穿搭吧！';
   }
 
-  function toggleAccessory(id: string): void {
-    if (selectedAccessoryIds.has(id)) {
-      selectedAccessoryIds.delete(id);
-    } else {
-      selectedAccessoryIds.add(id);
-    }
+  function cycleGroup(groupId: string): void {
+    const group = ACCESSORY_GROUPS.find((g) => g.id === groupId);
+    if (!group) return;
 
-    accessoryButtons.forEach((button) => {
-      const accessoryId = button.dataset.accessoryId ?? '';
-      const isPressed = selectedAccessoryIds.has(accessoryId);
-      button.setAttribute('aria-pressed', String(isPressed));
-      button.classList.toggle('is-selected', isPressed);
+    const nextIdx = ((groupCycleIndex[groupId] ?? 0) + 1) % (group.options.length + 1);
+    groupCycleIndex[groupId] = nextIdx;
+
+    const bubble = bubbleButtons.find((b) => b.dataset.bubbleGroup === groupId);
+    if (!bubble) return;
+
+    const isEmpty = nextIdx === 0;
+    const currentOpt = isEmpty ? undefined : group.options[nextIdx - 1];
+    bubble.textContent = isEmpty ? '＋' : currentOpt!.emoji;
+    bubble.setAttribute('aria-pressed', String(!isEmpty));
+    bubble.setAttribute('aria-label', isEmpty ? group.label : currentOpt!.label);
+    bubble.classList.toggle('is-selected', !isEmpty);
+
+    updateSelectionBadge();
+  }
+
+  function randomize(): void {
+    ACCESSORY_GROUPS.forEach((group) => {
+      const randomIdx = Math.floor(Math.random() * group.options.length) + 1;
+      groupCycleIndex[group.id] = randomIdx;
+      const bubble = bubbleButtons.find((b) => b.dataset.bubbleGroup === group.id);
+      if (bubble) {
+        const opt = group.options[randomIdx - 1]!;
+        bubble.textContent = opt.emoji;
+        bubble.setAttribute('aria-pressed', 'true');
+        bubble.setAttribute('aria-label', opt.label);
+        bubble.classList.add('is-selected');
+      }
     });
-
-    renderAccessoryLayer();
+    updateSelectionBadge();
   }
 
   function summon(): void {
@@ -209,25 +209,26 @@ export function createClaimOtterStepOne({ onNext = () => {} }: ClaimOtterStepOne
   }
 
   syncOtterName();
-  renderAccessoryLayer();
 
   summonButton.addEventListener('click', summon);
   nameInput.addEventListener('input', syncOtterName);
-  accessoryButtons.forEach((button) => {
+  bubbleButtons.forEach((button) => {
     button.addEventListener('click', () => {
-      const accessoryId = button.dataset.accessoryId;
-
-      if (!accessoryId) {
-        return;
-      }
-
-      toggleAccessory(accessoryId);
+      const groupId = button.dataset.bubbleGroup;
+      if (groupId) cycleGroup(groupId);
     });
   });
+  randomButton.addEventListener('click', randomize);
   nextButton.addEventListener('click', () => {
     onNext({
       name: otterName,
-      accessories: getSelectedAccessoryLabels(),
+      accessories: [],
+      gearSelections: Object.fromEntries(
+        ACCESSORY_GROUPS.map((g) => {
+          const idx = groupCycleIndex[g.id] ?? 0;
+          return [g.id, idx === 0 ? '' : g.options[idx - 1]!.id];
+        }),
+      ),
     });
   });
 
