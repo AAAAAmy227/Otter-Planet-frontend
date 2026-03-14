@@ -1,31 +1,26 @@
 # Otter Planet Frontend
 
-## 快速预览（本地 host）
+使用 **Vite** 重构后的前端工程，当前包含「领水獭 Step 1（召唤）」模块。
 
-这是一个纯静态页面工程，当前可直接预览「领水獭 Step 1」模块。
-
-### 方式 1：使用脚本（推荐）
+## 开发
 
 ```bash
-./scripts/preview.sh
+npm install
+npm run dev
 ```
 
-默认端口是 `4173`，打开：
+默认访问：
 
 - http://localhost:4173
 
-### 方式 2：指定端口
+## 构建
 
 ```bash
-./scripts/preview.sh 8080
+npm run build
 ```
 
-打开：
-
-- http://localhost:8080
-
-### 不使用脚本（等价命令）
+## 本地预览构建产物
 
 ```bash
-python3 -m http.server 4173
+npm run preview
 ```
