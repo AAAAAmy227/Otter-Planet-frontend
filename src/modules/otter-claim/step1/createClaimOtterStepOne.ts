@@ -79,7 +79,6 @@ export function createClaimOtterStepOne({ onNext = () => {} }: ClaimOtterStepOne
 
     <div class="claim-step-one__scene" aria-live="polite">
       <div class="floating-island"></div>
-      <div class="summon-ring" data-ring></div>
       <div class="otter-stage" data-stage>
         <img class="otter-shell" data-otter src="${otterImg}" alt="${DEFAULT_OTTER_NAME}" />
         <div class="otter-accessory-layer" data-accessory-layer aria-hidden="true"></div>
@@ -131,7 +130,6 @@ export function createClaimOtterStepOne({ onNext = () => {} }: ClaimOtterStepOne
   const otter = requireElement<HTMLImageElement>(element, '[data-otter]');
   const otterNameBadge = requireElement<HTMLElement>(element, '[data-otter-name]');
   const nameInput = requireElement<HTMLInputElement>(element, '[data-name-input]');
-  const ring = requireElement<HTMLElement>(element, '[data-ring]');
   const sparkles = requireElement<HTMLElement>(element, '[data-sparkles]');
   const accessoryLayer = requireElement<HTMLElement>(element, '[data-accessory-layer]');
   const accessoryButtons = Array.from(element.querySelectorAll<HTMLButtonElement>('[data-accessory-id]'));
@@ -207,7 +205,6 @@ export function createClaimOtterStepOne({ onNext = () => {} }: ClaimOtterStepOne
     isSummoned = true;
     element.classList.add('is-summoned');
     otter.classList.add('is-visible');
-    ring.classList.add('is-active');
     sparkles.classList.add('is-active');
 
     summonButton.textContent = '召唤成功！';
